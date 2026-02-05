@@ -192,7 +192,18 @@ st.title("Tyre Contact Area Generator")
 st.info("""
 **⚠️ IMPORTANT INSTRUCTIONS - PLEASE READ BEFORE UPLOADING**
 
-1.  **Image Prep:** Make sure that the image is aligned properly and all the additional or unnecessary black spots are removed from the image.
+1.  **Image Prep:** Make sure the image is aligned properly, with the maximum contact length in the middle of the horizontal page and the width vertical to the horizon. Remove all additional or unnecessary black spots.
+    
+    *See examples of proper alignment below:*
+""")
+
+col1, col2 = st.columns(2)
+with col1:
+    st.image("image_0.png", caption="Example 1: Proper Alignment", use_column_width=True)
+with col2:
+    st.image("image_1.png", caption="Example 2: Proper Alignment", use_column_width=True)
+
+st.info("""
 2.  **Parameters:** Contact width accuracy is critical for area calculation. Ensure your measurement is precise.
 3.  **Ink Quality:** If you think a contact should be there in a place but the ink is not well applied, **fill it using the Snipping Tool / Paint** before importing the image.
 """)
