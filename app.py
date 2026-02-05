@@ -48,6 +48,10 @@ def process_image_data(image_bytes, contact_width_mm, threshold_percent, tyre_na
         im = bnw_image.convert('1')
         
         na = np.array(im)
+        # 1. Count black pixels (False/0) in each row (axis=1)
+        black_pixels_per_row = np.sum(na == 0, axis=1)
+        # 2. Find the index of the row with the highest count
+        max_black_row_index = np.argmax(black_pixels_per_row)
         Pixel_X, Pixel_Y = na.shape
         Cut_offset = 1
         
@@ -65,6 +69,7 @@ def process_image_data(image_bytes, contact_width_mm, threshold_percent, tyre_na
             mid_point = na[Pixel_X // 2 + Cut_offset, Pixel_Y // 2]
 
         M = (Pixel_X // 2) + Cut_offset + 5
+        M = max_black_row_index // 2
         N = Pixel_Y // 2
 
         if M <= 0 or N <= 0:
