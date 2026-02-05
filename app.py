@@ -190,28 +190,26 @@ st.set_page_config(layout="wide", page_title="Tyre Contact Area Analysis")
 # --- ALWAYS VISIBLE INSTRUCTIONS ---
 st.title("Tyre Contact Area Generator")
 
-st.info("""
-**⚠️ IMPORTANT INSTRUCTIONS - PLEASE READ BEFORE UPLOADING**
-
-1.  **Image Prep:** Make sure the image is aligned properly, with the maximum contact length in the middle of the horizontal page and the width vertical to the horizon. Remove all additional or unnecessary black spots.
+# Instructions container
+with st.container():
+    st.info("⚠️ **IMPORTANT INSTRUCTIONS - PLEASE READ BEFORE UPLOADING**")
     
-    *See examples of proper alignment below:*
-""")
+    # Create 3 columns: Large text column, small image 1, small image 2
+    col_text, col_img1, col_img2 = st.columns([3, 1, 1])
+    
+    with col_text:
+        st.markdown("""
+        1.  **Image Prep:** Make sure the image is aligned properly, with the maximum contact length in the middle of the horizontal page. Remove all additional or unnecessary black spots.
+        2.  **Parameters:** Contact width accuracy is critical for area calculation. Ensure your measurement is precise.
+        3.  **Ink Quality:** If you think a contact should be there but the ink is faint, **fill it using Paint/Snipping Tool** before uploading.
+        """)
+        
+    with col_img1:
+        st.image("DATL_fp.jpg", caption="✅ Correct", use_column_width=True)
 
-# --- UPDATED IMAGE LOADING ---
-# Ensure 'DATL_fp.jpg' and 'Wrong.jpg' are in the same folder as this script
-col1, col2 = st.columns(2)
-with col1:
-    # Using the "Correct" image you provided
-    st.image("image_02.png", caption="✅ Correct Alignment: Horizontal & Centered", use_column_width=False)
-with col2:
-    # Using the "Wrong" image you provided
-    st.image("image_01.png", caption="❌ Incorrect Alignment: Angled or Offset", use_column_width=False)
+    with col_img2:
+        st.image("Wrong.jpg", caption="❌ Incorrect", use_column_width=True)
 
-st.info("""
-2.  **Parameters:** Contact width accuracy is critical for area calculation. Ensure your measurement is precise.
-3.  **Ink Quality:** If you think a contact should be there in a place but the ink is not well applied, **fill it using the Snipping Tool / Paint** before importing the image.
-""")
 # ------------------------------------
 
 # Initialize session state to hold the results
