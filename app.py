@@ -194,7 +194,7 @@ st.title("Tyre Contact Area Generator")
 with st.container():
     
     # Create 3 columns: Large text column, small image 1, small image 2
-    col_text, col_img1, col_img2 = st.columns([3, 1, 1])
+    col_text, col_img1, col_img2 = st.columns([5, 1, 1])
     
     with col_text:
         st.markdown("""
