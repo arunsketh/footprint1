@@ -206,7 +206,7 @@ with col1:
     st.image("image_02.png", caption="✅ Correct Alignment: Horizontal & Centered", use_column_width=False)
 with col2:
     # Using the "Wrong" image you provided
-    st.image("image_01.png", caption="❌ Incorrect Alignment: Angled or Offset", use_column_width=True)
+    st.image("image_01.png", caption="❌ Incorrect Alignment: Angled or Offset", use_column_width=False)
 
 st.info("""
 2.  **Parameters:** Contact width accuracy is critical for area calculation. Ensure your measurement is precise.
