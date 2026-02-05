@@ -186,30 +186,45 @@ def save_plot_to_buffer(fig):
 
 # --- Streamlit GUI ---
 st.set_page_config(layout="wide", page_title="Tyre Contact Area Analysis")
+st.markdown("""
+    <style>
+        /* Reduce padding at the top of the page */
+        .block-container {
+            padding-top: 1rem;
+            padding-bottom: 0rem;
+        }
+        /* Hide the Streamlit header/toolbar to save space */
+        header {visibility: hidden;}
+        #MainMenu {visibility: hidden;}
+        footer {visibility: hidden;}
+    </style>
+""", unsafe_allow_html=True)
 
 # --- ALWAYS VISIBLE INSTRUCTIONS ---
-st.title("Tyre Contact Area Generator")
+st.title("# Tyre Contact Area Generator")
 
 # Instructions container
+# Instructions container
 with st.container():
-    
     # Create 3 columns: Large text column, small image 1, small image 2
     col_text, col_img1, col_img2 = st.columns([6, 1, 1])
     
     with col_text:
+        # Fixed the red text syntax here
         st.markdown("""
-        ⚠️ :red **IMPORTANT INSTRUCTIONS - PLEASE READ BEFORE UPLOADING**
-        1.  **Image Prep:** Make sure the image is aligned properly, with the maximum contact length in the middle of the horizontal page. Remove all additional or unnecessary black spots.
-        2.  **Parameters:** Accuracy in contact width is paramount for area calculations. Exercise extreme precision during your measurements.
-        3.  **Ink Quality:** If you think a contact should be there but the ink is faint, **fill it using Paint/Snipping Tool** before uploading.
+        ⚠️ :red[**IMPORTANT INSTRUCTIONS - PLEASE READ BEFORE UPLOADING**]
+        
+        1. **Image Prep:** Make sure the image is aligned properly, with the maximum contact length in the middle of the horizontal page. Remove all additional or unnecessary black spots.
+        2. **Parameters:** Accuracy in contact width is paramount for area calculations. Exercise extreme precision during your measurements.
+        3. **Ink Quality:** If you think a contact should be there but the ink is faint, **fill it using Paint/Snipping Tool** before uploading.
         4. **Black Recognition:** Modulate the threshold settings until the processed image achieves optimal clarity and definition
         """)
         
     with col_img1:
-        st.image("image_02.png", caption="✅ Correct Alignment", use_column_width=2)
+        st.image("image_02.png", caption="✅ Correct Alignment", use_column_width=True)
 
     with col_img2:
-        st.image("image_01.png", caption="❌ Incorrect Alignment", use_column_width=2)
+        st.image("image_01.png", caption="❌ Incorrect Alignment", use_column_width=True)2)
 
 # ------------------------------------
 
