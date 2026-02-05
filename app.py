@@ -201,7 +201,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- ALWAYS VISIBLE INSTRUCTIONS ---
-st.markdown("## Tyre Contact Area Generator")
+st.markdown("## Tyre Contact Area Generator \n :red[**IMPORTANT INSTRUCTIONS - PLEASE READ BEFORE UPLOADING**]")  
 
 # Instructions container
 # Instructions container
@@ -211,8 +211,7 @@ with st.container():
     
     with col_text:
         # Fixed the red text syntax here
-        st.markdown("""
-        ⚠️ :red[###**IMPORTANT INSTRUCTIONS - PLEASE READ BEFORE UPLOADING**]        
+        st.markdown(""" 
         1. **Image Prep:** Make sure the image is aligned properly, with the maximum contact length in the middle of the horizontal page. Remove all additional or unnecessary black spots.
         2. **Parameters:** Accuracy in contact width is paramount for area calculations. Exercise extreme precision during your measurements.
         3. **Ink Quality:** If you think a contact should be there but the ink is faint, **fill it using Paint/Snipping Tool** before uploading.
