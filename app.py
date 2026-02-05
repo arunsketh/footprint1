@@ -186,7 +186,17 @@ def save_plot_to_buffer(fig):
 
 # --- Streamlit GUI ---
 st.set_page_config(layout="wide", page_title="Tyre Contact Area Analysis")
+
+# --- ALWAYS VISIBLE INSTRUCTIONS ---
 st.title("Tyre Contact Area Generator")
+st.info("""
+**⚠️ IMPORTANT INSTRUCTIONS - PLEASE READ BEFORE UPLOADING**
+
+1.  **Image Prep:** Make sure that the image is aligned properly and all the additional or unnecessary black spots are removed from the image.
+2.  **Parameters:** Contact width accuracy is critical for area calculation. Ensure your measurement is precise.
+3.  **Ink Quality:** If you think a contact should be there in a place but the ink is not well applied, **fill it using the Snipping Tool / Paint** before importing the image.
+""")
+# ------------------------------------
 
 # Initialize session state to hold the results
 if 'final_figure' not in st.session_state:
