@@ -197,11 +197,23 @@ st.info("""
     *See examples of proper alignment below:*
 """)
 
+st.info("""
+**⚠️ IMPORTANT INSTRUCTIONS - PLEASE READ BEFORE UPLOADING**
+
+1.  **Image Prep:** Make sure the image is aligned properly, with the maximum contact length in the middle of the horizontal page and the width vertical to the horizon. Remove all additional or unnecessary black spots.
+    
+    *See examples of proper alignment below:*
+""")
+
+# --- UPDATED IMAGE LOADING ---
+# Ensure 'DATL_fp.jpg' and 'Wrong.jpg' are in the same folder as this script
 col1, col2 = st.columns(2)
 with col1:
-    st.image("image_0.png", caption="Example 1: Proper Alignment", use_column_width=True)
+    # Using the "Correct" image you provided
+    st.image("image_02.png", caption="✅ Correct Alignment: Horizontal & Centered", use_column_width=True)
 with col2:
-    st.image("image_1.png", caption="Example 2: Proper Alignment", use_column_width=True)
+    # Using the "Wrong" image you provided
+    st.image("image_01.png", caption="❌ Incorrect Alignment: Angled or Offset", use_column_width=True)
 
 st.info("""
 2.  **Parameters:** Contact width accuracy is critical for area calculation. Ensure your measurement is precise.
