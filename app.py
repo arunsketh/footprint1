@@ -5,13 +5,12 @@ from copy import deepcopy
 import matplotlib.pyplot as plt
 import io
 
-# --- Core Image Processing Logic (Adapted from your Tkinter script) ---
-# Note: Functions are now independent and don't rely on a class structure.
+# --- Core Image Processing Logic ---
 
 def process_image_data(image_bytes, contact_width_mm, threshold_percent, tyre_name):
     """
-    This function contains the main image processing pipeline from your script.
-    It takes image data and parameters, and returns the final figure to display.
+    Takes image data and parameters, processes the footprint, and returns the figure.
+    Uses Explicit Slicing (Method 1) to ensure quadrant dimensions match.
     """
     try:
         threshold_limit = int(float(threshold_percent) * 2.55)
@@ -26,7 +25,8 @@ def process_image_data(image_bytes, contact_width_mm, threshold_percent, tyre_na
         number_of_black_pix = np.sum(imx <= threshold_limit)
         number_of_white_pix = np.sum(imx > threshold_limit)
         sum_pix = number_of_white_pix + number_of_black_pix
-        # Handle division by zero if sum_pix is 0
+        
+        # Handle division by zero
         percent_black = (number_of_black_pix / sum_pix) if sum_pix > 0 else 0
 
         # Adjust threshold automatically
@@ -44,47 +44,46 @@ def process_image_data(image_bytes, contact_width_mm, threshold_percent, tyre_na
         imx3 = np.where(imx <= threshold_limit, 0, 255).astype(np.uint8)
         bnw_image = Image.fromarray(imx3)
 
-        # --- Gap Filling Logic (painter function and array manipulation) ---
+        # --- Gap Filling & Analysis Logic ---
         im = bnw_image.convert('1')
         
         na = np.array(im)
-        # 1. Count black pixels (False/0) in each row (axis=1)
-        black_pixels_per_row = np.sum(na == 0, axis=1)
-        # 2. Find the index of the row with the highest count
-        max_black_row_index = np.argmax(black_pixels_per_row)
         Pixel_X, Pixel_Y = na.shape
-        Cut_offset = 1
-        
-        # Boundary check for mid_point calculation
-        if Pixel_X // 2 >= Pixel_X or Pixel_Y // 2 >= Pixel_Y:
-            st.error("Image dimensions are too small for processing.")
-            return None
-            
-        mid_point = na[Pixel_X // 2, Pixel_Y // 2]
-        while mid_point:
-            Cut_offset += 1
-            if (Pixel_X // 2 + Cut_offset) >= Pixel_X: # Boundary check
-                st.warning("Could not determine mid-point offset. Results may be affected.")
-                break
-            mid_point = na[Pixel_X // 2 + Cut_offset, Pixel_Y // 2]
 
-        #M = (Pixel_X // 2) + Cut_offset + 5
-        M = max_black_row_index 
+        # 1. Count black pixels in each row
+        black_pixels_per_row = np.sum(na == 0, axis=1)
+        # 2. Find the row index with the highest count (widest part of footprint)
+        max_black_row_index = np.argmax(black_pixels_per_row)
+
+        # Define Split Points
+        # We use max_black_row_index as the horizontal split line (M)
+        M = max_black_row_index
         N = Pixel_Y // 2
 
-        if M <= 0 or N <= 0:
-            st.error("Calculated quadrant dimensions are invalid. Please check image integrity.")
-            return None
+        # --- REPLACED: EXPLICIT SLICING METHOD (Fixes unequal array sizes) ---
+        
+        # safety check: ensure M and N are within the image bounds
+        # We need at least 1 pixel in every quadrant
+        if M <= 0: M = 1
+        if M >= Pixel_X: M = Pixel_X - 1
+        if N <= 0: N = 1
+        if N >= Pixel_Y: N = Pixel_Y - 1
 
-        Cells = [na[x:x + M, y:y + N] for x in range(0, na.shape[0], M) for y in range(0, na.shape[1], N)]
-        if len(Cells) < 4:
-            st.error("Image processing failed: Could not split the image into four quadrants. Try a different image or adjust parameters.")
-            return None
+        # Slice the array directly into 4 named quadrants
+        # TL = Top-Left, TR = Top-Right, BL = Bottom-Left, BR = Bottom-Right
+        # Format: array[Rows, Columns]
+        arr2D_TL_Act_Fill = deepcopy(na[0:M, 0:N])
+        arr2D_TR_Act_Fill = deepcopy(na[0:M, N:])
+        arr2D_BL_Act_Fill = deepcopy(na[M:, 0:N])
+        arr2D_BR_Act_Fill = deepcopy(na[M:, N:])
 
-        Cells_Deepcopy = deepcopy([cell for cell in Cells if cell.shape[0] > 1 and cell.shape[1] > 1])
-        if len(Cells_Deepcopy) < 4:
-            st.error("Image processing failed after filtering quadrants. Image may be too small or irregular.")
-            return None
+        # --- End of Replacement ---
+
+        # Create flipped copies for gap filling logic
+        arr2D_TL_Flp_Fill = deepcopy(np.flipud(arr2D_TL_Act_Fill))
+        arr2D_TR_Flp_Fill = deepcopy(np.flipud(arr2D_TR_Act_Fill))
+        arr2D_BL_Flp_Fill = deepcopy(np.flipud(arr2D_BL_Act_Fill))
+        arr2D_BR_Flp_Fill = deepcopy(np.flipud(arr2D_BR_Act_Fill))
 
         # Define the painter function to fill vertical gaps
         def painter(array):
@@ -97,26 +96,16 @@ def process_image_data(image_bytes, contact_width_mm, threshold_percent, tyre_na
                     elif array[i][j] and pollute != 2: # if pixel is white and we've seen a black pixel
                         array[i][j] = False # fill the gap
             return array
-
-        # *** CORRECTED LOGIC TO REPLICATE ORIGINAL SCRIPT'S INTENT ***
-        # Create copies for processing
-        arr2D_TL_Act_Fill = deepcopy(Cells_Deepcopy[0])
-        arr2D_TR_Act_Fill = deepcopy(Cells_Deepcopy[1])
-        arr2D_BL_Act_Fill = deepcopy(Cells_Deepcopy[2])
-        arr2D_BR_Act_Fill = deepcopy(Cells_Deepcopy[3])
-
-        arr2D_TL_Flp_Fill = deepcopy(np.flipud(arr2D_TL_Act_Fill))
-        arr2D_TR_Flp_Fill = deepcopy(np.flipud(arr2D_TR_Act_Fill))
-        arr2D_BL_Flp_Fill = deepcopy(np.flipud(arr2D_BL_Act_Fill))
-        arr2D_BR_Flp_Fill = deepcopy(np.flipud(arr2D_BR_Act_Fill))
         
-        # Process top and bottom cells using painter function
+        # Group arrays for processing
         array_listT = [arr2D_TL_Flp_Fill, arr2D_TR_Flp_Fill, arr2D_TL_Act_Fill, arr2D_TR_Act_Fill]
         array_listB = [arr2D_BL_Flp_Fill, arr2D_BR_Flp_Fill, arr2D_BL_Act_Fill, arr2D_BR_Act_Fill]
         
+        # Apply painter to Top quadrants
         for item in array_listT:
              item = painter(item)
         
+        # Apply painter to Bottom quadrants and flip back
         for item in array_listB:
              item = painter(item)
              item = np.flipud(item)
@@ -125,13 +114,15 @@ def process_image_data(image_bytes, contact_width_mm, threshold_percent, tyre_na
         array_listF =  [np.logical_or(arr2D_TL_Flp_Fill, np.flipud(arr2D_TL_Act_Fill)),
                         np.logical_or(arr2D_TR_Flp_Fill, np.flipud(arr2D_TR_Act_Fill)),
                         np.logical_or(arr2D_BL_Flp_Fill, np.flipud(arr2D_BL_Act_Fill)),
-                        np.logical_or(arr2D_BR_Flp_Fill, np.flipud(arr2D_BR_Act_Fill))]    
+                        np.logical_or(arr2D_BR_Flp_Fill, np.flipud(arr2D_BR_Act_Fill))]     
         
         # Recombine the fully processed quadrants into the final image
+        # Because we sliced explicitly, these stacks will match perfectly.
         arrT = np.hstack((array_listF[0], array_listF[1]))
         arrT = np.flipud(arrT)
         arrB = np.hstack((array_listF[2], array_listF[3]))
         arrB = np.flipud(arrB)
+        
         arr2D3 = np.vstack((arrT, arrB)) # This is the final filled image array
 
         # --- Calculations ---
