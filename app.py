@@ -68,8 +68,8 @@ def process_image_data(image_bytes, contact_width_mm, threshold_percent, tyre_na
                 break
             mid_point = na[Pixel_X // 2 + Cut_offset, Pixel_Y // 2]
 
-        M = (Pixel_X // 2) + Cut_offset + 5
-        M = max_black_row_index // 2
+        #M = (Pixel_X // 2) + Cut_offset + 5
+        M = max_black_row_index 
         N = Pixel_Y // 2
 
         if M <= 0 or N <= 0:
