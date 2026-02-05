@@ -189,13 +189,6 @@ st.set_page_config(layout="wide", page_title="Tyre Contact Area Analysis")
 
 # --- ALWAYS VISIBLE INSTRUCTIONS ---
 st.title("Tyre Contact Area Generator")
-st.info("""
-**⚠️ IMPORTANT INSTRUCTIONS - PLEASE READ BEFORE UPLOADING**
-
-1.  **Image Prep:** Make sure the image is aligned properly, with the maximum contact length in the middle of the horizontal page and the width vertical to the horizon. Remove all additional or unnecessary black spots.
-    
-    *See examples of proper alignment below:*
-""")
 
 st.info("""
 **⚠️ IMPORTANT INSTRUCTIONS - PLEASE READ BEFORE UPLOADING**
@@ -210,7 +203,7 @@ st.info("""
 col1, col2 = st.columns(2)
 with col1:
     # Using the "Correct" image you provided
-    st.image("image_02.png", caption="✅ Correct Alignment: Horizontal & Centered", use_column_width=True)
+    st.image("image_02.png", caption="✅ Correct Alignment: Horizontal & Centered", use_column_width=False)
 with col2:
     # Using the "Wrong" image you provided
     st.image("image_01.png", caption="❌ Incorrect Alignment: Angled or Offset", use_column_width=True)
