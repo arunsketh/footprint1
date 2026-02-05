@@ -177,6 +177,13 @@ def process_image_data(image_bytes, contact_width_mm, threshold_percent, tyre_na
         st.error(f"An error occurred during processing: {e}")
         return None
 
+def save_plot_to_buffer(fig):
+    """Saves the matplotlib figure to an in-memory buffer for downloading"""
+    buf = io.BytesIO()
+    fig.savefig(buf, format="png", bbox_inches='tight', dpi=150)
+    buf.seek(0)
+    return buf
+
 # --- Streamlit GUI ---
 st.set_page_config(layout="wide", page_title="Tyre Contact Area Analysis")
 st.title("Tyre Contact Area Generator")
@@ -208,3 +215,20 @@ if process_button:
 if st.session_state.final_figure is not None:
     st.subheader("Analysis Results")
     st.pyplot(st.session_state.final_figure)
+    
+    # --- DOWNLOAD BUTTON LOGIC ---
+    # Create a buffer for the image
+    plot_buffer = save_plot_to_buffer(st.session_state.final_figure)
+    
+    # Generate a filename
+    file_name = f"{tyre_name_input if tyre_name_input else 'Tyre_Analysis'}.png"
+    
+    # Create columns to align the button nicely
+    col1, col2 = st.columns([1, 4])
+    with col1:
+        st.download_button(
+            label="💾 Download Result Image",
+            data=plot_buffer,
+            file_name=file_name,
+            mime="image/png"
+        )
