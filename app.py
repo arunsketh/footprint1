@@ -205,10 +205,10 @@ with st.container():
         """)
         
     with col_img1:
-        st.image("DATL_fp.jpg", caption="✅ Correct", use_column_width=True)
+        st.image("image_02.png", caption="✅ Correct", use_column_width=True)
 
     with col_img2:
-        st.image("Wrong.jpg", caption="❌ Incorrect", use_column_width=True)
+        st.image("image_01.png", caption="❌ Incorrect", use_column_width=True)
 
 # ------------------------------------
 
