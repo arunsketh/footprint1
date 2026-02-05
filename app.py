@@ -224,7 +224,7 @@ with st.container():
         st.image("image_02.png", caption="✅ Correct Alignment", use_column_width=True)
 
     with col_img2:
-        st.image("image_01.png", caption="❌ Incorrect Alignment", use_column_width=True)2)
+        st.image("image_01.png", caption="❌ Incorrect Alignment", use_column_width=True)
 
 # ------------------------------------
 
