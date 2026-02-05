@@ -201,7 +201,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- ALWAYS VISIBLE INSTRUCTIONS ---
-st.markdown("## Tyre Contact Area Generator \n :red[**IMPORTANT INSTRUCTIONS - PLEASE READ BEFORE UPLOADING**]")  
+st.markdown("## Tyre Contact Area Generator \n:red[**IMPORTANT INSTRUCTIONS - PLEASE READ BEFORE UPLOADING**]")  
 
 # Instructions container
 # Instructions container
